@@ -13,7 +13,7 @@ Institute Business and Informatics Kesatuan Bogor
 - Apache Maven [here](https://maven.apache.org/download.cgi) 
 - Extension pack VSCode for SPRING-BOOT [here](https://code.visualstudio.com/docs/java/java-spring-boot)
 
-## How to compile and Run JAVA File
+## How to RUN REST API
 
 1. Open terminal/command line
 2. Enter to directory of your project
