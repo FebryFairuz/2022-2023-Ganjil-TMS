@@ -1,13 +1,13 @@
-package com.ibik.api.programstudy.programstudy;
+package com.ibik.api.academicservices;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProgramStudyApplication {
+public class AcademicServicesApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProgramStudyApplication.class, args);
+		SpringApplication.run(AcademicServicesApplication.class, args);
 	}
 
 }

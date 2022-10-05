@@ -1,4 +1,4 @@
-package com.ibik.api.programstudy.programstudy.programs;
+package com.ibik.api.academicservices.programs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/programs")
-public class ProgramsController {
+public class ProgramsControllers {
 
     @Autowired
     private ProgramsServices programsServices;

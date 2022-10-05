@@ -1,10 +1,10 @@
-package com.ibik.api.programstudy.programstudy;
+package com.ibik.api.academicservices;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ProgramStudyApplicationTests {
+class AcademicServicesApplicationTests {
 
 	@Test
 	void contextLoads() {
