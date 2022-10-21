@@ -18,16 +18,14 @@ public class ProgramsServices {
 
     public Programs findOne(int id){
         return programsRepo.findById(id).get();
-        //select * from programs where id = 1
     }
 
     public Iterable<Programs> findAll(){
-        return programsRepo.findAll(); //select * from programs
+        return programsRepo.findAll();
     }
 
     public void removeOne(int id){
         programsRepo.deleteById(id);
     }
-
-
+    
 }

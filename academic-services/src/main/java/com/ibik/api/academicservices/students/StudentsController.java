@@ -1,4 +1,4 @@
-package com.ibik.api.academicservices.programs;
+package com.ibik.api.academicservices.students;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,48 +13,56 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ibik.api.academicservices.dto.ResponseData;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 @RestController
-@RequestMapping("/api/programs")
-public class ProgramsControllers {
+@RequestMapping("/api/students")
+public class StudentsController {
 
     @Autowired
-    private ProgramsServices programsServices;
+    private StudentsServices studentsServices;
 
     @PostMapping
-    public ResponseEntity<ResponseData<Programs>> postPrograms(@Valid @RequestBody Programs programs, Errors errors) {
-        ResponseData<Programs> responseData = new ResponseData<>();
+    // public Students postStudent(@Valid @RequestBody Students students, Errors errors) {
+    public ResponseEntity<ResponseData<Students>> postStudent(@Valid @RequestBody Students students, Errors errors) {
+
+        ResponseData<Students> responseData = new ResponseData<>();
 
         if (errors.hasErrors()) {
             for (ObjectError error : errors.getAllErrors()) {
+                // System.out.println(error.getDefaultMessage());
                 responseData.getMessage().add(error.getDefaultMessage());
             }
+
             responseData.setResult(false);
             responseData.setData(null);
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+
+            // throw new RuntimeException("Validation Error")
         }
 
         responseData.setResult(true);
-        List<Programs> value = new ArrayList<>();
-        value.add(programsServices.save(programs));
+        List<Students> value = new ArrayList<>();
+        value.add(studentsServices.save(students));
         responseData.setData(value);
         return ResponseEntity.ok(responseData);
+        // return studentsServices.save(students);
     }
 
     @GetMapping
-    // public ResponseEntity<ResponseData<Students>> fetchStudent() {
-    public ResponseEntity<ResponseData<Programs>> fetchPrograms() {
-        ResponseData<Programs> responseData = new ResponseData<>();
+    // public Iterable<Students> fetchStudent(){
+    public ResponseEntity<ResponseData<Students>> fetchStudent() {
+        // return studentsServices.findAll();
+        ResponseData<Students> responseData = new ResponseData<>();
         try {
-            Iterable<Programs> values = programsServices.findAll();
+            Iterable<Students> values = studentsServices.findAll();
             responseData.setResult(true);
             responseData.setMessage(null);
             responseData.setData(values);
@@ -70,15 +78,18 @@ public class ProgramsControllers {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseData<Programs>> fetchProgramsById(@PathVariable("id") int id) {
-        ResponseData<Programs> responseData = new ResponseData<>();
+    // public Students fetchStudentById(@PathVariable("id") int id){
+    public ResponseEntity<ResponseData<Students>> fetchStudentById(@PathVariable("id") int id) {
+        // return studentsServices.findOne(id);
+        ResponseData<Students> responseData = new ResponseData<>();
+
         try {
-            Programs values = programsServices.findOne(id);
-            List<Programs> result = new ArrayList<>();
+            Students values = studentsServices.findOne(id);
+            List<Students> result = new ArrayList<>();
             result.add(values);
+            responseData.setData(result);
             responseData.setResult(true);
             responseData.setMessage(null);
-            responseData.setData(result);
             return ResponseEntity.ok(responseData);
         } catch (Exception e) {
             List<String> message = new ArrayList<>();
@@ -91,11 +102,12 @@ public class ProgramsControllers {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseData<Programs>> updatePrograms(@Valid @RequestBody Programs programs, Errors errors) {
+    // public Students updateStudent(@RequestBody Students students){
+    public ResponseEntity<ResponseData<Students>> updateStudent(@Valid @RequestBody Students students, Errors errors) {
+        ResponseData<Students> responseData = new ResponseData<>();
 
-        ResponseData<Programs> responseData = new ResponseData<>();
+        if (students.getId() != 0) {
 
-        if (programs.getId() != 0) {
             if (errors.hasErrors()) {
                 for (ObjectError error : errors.getAllErrors()) {
                     responseData.getMessage().add(error.getDefaultMessage());
@@ -106,10 +118,11 @@ public class ProgramsControllers {
             }
 
             responseData.setResult(true);
-            List<Programs> value = new ArrayList<>();
-            value.add(programsServices.save(programs));
+            List<Students> value = new ArrayList<>();
+            value.add(studentsServices.save(students));
             responseData.setData(value);
             return ResponseEntity.ok(responseData);
+
         } else {
             responseData.setResult(false);
             responseData.setData(null);
@@ -121,11 +134,12 @@ public class ProgramsControllers {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseData<Programs>> deleteProgramsById(@PathVariable("id") int id) {
-        ResponseData<Programs> responseData = new ResponseData<>();
-        if (id != 0) {
+    //public void deleteStudentById(@PathVariable("id") int id){
+    public ResponseEntity<ResponseData<Students>> deleteStudentById(@PathVariable("id") int id){    
+        ResponseData<Students> responseData = new ResponseData<>();
+        if(id != 0){
             try {
-                programsServices.removeOne(id);
+                studentsServices.removeOne(id);
                 List<String> message = new ArrayList<>();
                 message.add("Successfully removed");
                 responseData.setMessage(message);
@@ -140,7 +154,7 @@ public class ProgramsControllers {
                 responseData.setResult(false);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
             }
-        } else {
+        }else{
             List<String> message = new ArrayList<>();
             message.add("ID is required");
             responseData.setMessage(message);
@@ -148,7 +162,7 @@ public class ProgramsControllers {
             responseData.setResult(false);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
-
+        
     }
 
 }
