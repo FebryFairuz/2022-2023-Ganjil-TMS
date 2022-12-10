@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ibik.api.academicservices.dto.ResponseData;
+import com.ibik.api.academicservices.dto.SearchData;
 
 @RestController
 @RequestMapping("/api/students")
@@ -31,7 +32,6 @@ public class StudentsController {
     @PostMapping
     // public Students postStudent(@Valid @RequestBody Students students, Errors errors) {
     public ResponseEntity<ResponseData<Students>> postStudent(@Valid @RequestBody Students students, Errors errors) {
-
         ResponseData<Students> responseData = new ResponseData<>();
 
         if (errors.hasErrors()) {
@@ -48,10 +48,19 @@ public class StudentsController {
             // throw new RuntimeException("Validation Error")
         }
 
-        responseData.setResult(true);
-        List<Students> value = new ArrayList<>();
-        value.add(studentsServices.save(students));
-        responseData.setData(value);
+        try {
+            responseData.setResult(true);
+            List<Students> value = new ArrayList<>();
+            value.add(studentsServices.save(students));
+            responseData.setData(value);    
+        } catch (Exception e) {
+            responseData.setData(null);
+            responseData.setResult(false);
+            List<String> message = new ArrayList<>();
+            message.add(e.getMessage());
+            responseData.setMessage(message);
+        }
+        
         return ResponseEntity.ok(responseData);
         // return studentsServices.save(students);
     }
@@ -117,11 +126,23 @@ public class StudentsController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
             }
 
-            responseData.setResult(true);
-            List<Students> value = new ArrayList<>();
-            value.add(studentsServices.save(students));
-            responseData.setData(value);
-            return ResponseEntity.ok(responseData);
+            
+
+            try {
+                responseData.setResult(true);
+                List<Students> value = new ArrayList<>();
+                value.add(studentsServices.save(students));
+                responseData.setData(value);
+                
+            } catch (Exception e) {
+                responseData.setData(null);
+                responseData.setResult(false);
+                List<String> message = new ArrayList<>();
+                message.add(e.getMessage());
+                responseData.setMessage(message);
+            }
+
+            return ResponseEntity.ok(responseData);    
 
         } else {
             responseData.setResult(false);
@@ -129,8 +150,11 @@ public class StudentsController {
             List<String> message = new ArrayList<>();
             message.add("ID is required");
             responseData.setMessage(message);
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
+
+        
     }
 
     @DeleteMapping("/{id}")
@@ -163,6 +187,26 @@ public class StudentsController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
         
+    }
+
+
+    @PostMapping("/search")
+    public ResponseEntity<ResponseData<Students>> getStudentByName(@RequestBody SearchData searchData){
+        ResponseData<Students> responseData = new ResponseData<>();
+        try {
+            Iterable<Students> values = studentsServices.findByName(searchData.getSearchKey());
+            responseData.setResult(true);
+            responseData.setMessage(null);
+            responseData.setData(values);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            List<String> message = new ArrayList<>();
+            message.add(e.getMessage());
+            responseData.setMessage(message);
+            responseData.setData(null);
+            responseData.setResult(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
     }
 
 }

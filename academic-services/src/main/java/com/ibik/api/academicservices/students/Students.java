@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 import com.ibik.api.academicservices.courses.Courses;
@@ -33,29 +34,38 @@ public class Students implements Serializable{
     @NotEmpty(message = "NPM is required")
     private String npm;
 
-    @Column(length=10)
+    @Column(length=20)
     @NotEmpty(message = "Firstname is required")
     private String firstname;
 
-    @Column(length=10)
+    @Column(length=20)
     private String middlename;
 
-    @Column(length=10)
+    @Column(length=20)
     @NotEmpty(message = "Lastname is required")
     private String lastname;
 
-    // @Min(value = 1, message = "Program is required")
+    @Column(length=50)
+    @NotEmpty(message = "Email is required")
+    private String email;
+
+    @Column(columnDefinition = "DATE")
+    @NotEmpty(message = "Birthdate is required")
+    private String birthdate;
+
+    // @Min(value = 1, message = "Program id is required")
     // private int program_id;
+
     @ManyToOne
     @JoinColumn(name = "program_id")
     private Programs programs;
 
-    // @Min(value = 1, message = "Department is required")
-    // private int department_id;
+    // @Min(value = 1, message = "Program Study ID is required")
+    // private int program_study_id;
 
     @ManyToOne
     @JoinColumn(name = "program_study_id")
-    private Set<ProgramStudy> programStudy;
+    private ProgramStudy programStudy;
     
     @ManyToMany
     @JoinTable(
@@ -71,13 +81,36 @@ public class Students implements Serializable{
     public Students(int id, @NotEmpty(message = "NPM is required") String npm,
             @NotEmpty(message = "Firstname is required") String firstname, String middlename,
             @NotEmpty(message = "Lastname is required") String lastname,
+            @NotEmpty(message = "Email is required") String email,
+            @NotEmpty(message = "Birthdate is required") String birthdate,
             @NotEmpty(message = "Program is required") int program_id,
-            @NotEmpty(message = "Department is required") int department_id) {
+            @NotEmpty(message = "Program Study ID is required") int program_study_id) {
         this.id = id;
         this.npm = npm;
         this.firstname = firstname;
         this.middlename = middlename;
         this.lastname = lastname;
+        this.email = email;
+        this.birthdate = birthdate;
+        //this.program_id = program_id;
+        //this.program_study_id = program_study_id;
+    }
+
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getId() {
@@ -120,6 +153,13 @@ public class Students implements Serializable{
         this.lastname = lastname;
     }
 
+    // public int getProgram_id() {
+    //     return program_id;
+    // }
+
+    // public void setProgram_id(int program_id) {
+    //     this.program_id = program_id;
+    // }
 
     public Programs getPrograms() {
         return programs;
@@ -129,6 +169,14 @@ public class Students implements Serializable{
         this.programs = programs;
     }
 
+    // public int getProgram_study_id() {
+    //     return program_study_id;
+    // }
+
+    // public void setProgram_study_id(int program_study_id) {
+    //     this.program_study_id = program_study_id;
+    // }
+
     public Set<Courses> getCourses() {
         return courses;
     }
@@ -137,13 +185,14 @@ public class Students implements Serializable{
         this.courses = courses;
     }
 
-    public Set<ProgramStudy> getProgramStudy() {
+    public ProgramStudy getProgramStudy() {
         return programStudy;
     }
 
-    public void setProgramStudy(Set<ProgramStudy> programStudy) {
+    public void setProgramStudy(ProgramStudy programStudy) {
         this.programStudy = programStudy;
     }
+
 
 
 }

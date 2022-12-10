@@ -37,20 +37,20 @@ public class ProgramStudy implements Serializable{
     private String code;
 
     //@NotEmpty(message = "Program id is required")
+    //private int program_id
+
     @ManyToOne
     @JoinColumn(name = "program_id")
     private Programs programs;
 
     //@NotEmpty(message = "Faculty is required")
+    //private int faculty_id
+
     @OneToMany
     @JoinColumn(name="faculty_id")
     private Set<ProgramStudy> Departments;
-    //private int faculty_id;
 
-    // @OneToMany
-    // @JoinColumn(name="department_id")
-    // private Set<ProgramStudy> departments;
-    //private int department_id;
+
 
     @Column(columnDefinition = "TINYINT(1)")
     private boolean is_active;
@@ -59,8 +59,7 @@ public class ProgramStudy implements Serializable{
     }
 
     public ProgramStudy(int id, @NotEmpty(message = "Name is required") String name, String description,
-            @NotEmpty(message = "Code is required") String code, int program_id, int faculty_id, int department_id,
-            boolean is_active) {
+            @NotEmpty(message = "Code is required") String code, boolean is_active) {
         this.id = id;
         this.name = name;
         this.description = description;
