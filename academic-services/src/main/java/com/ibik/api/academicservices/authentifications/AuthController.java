@@ -51,9 +51,7 @@ public class AuthController {
                     .withIssuer("auth0")
                     .sign(algorithm);
 
-            List<String> result = new ArrayList<>();
-            result.add(access_token);
-            result.add(refresh_token);
+            
             Map<String,String> results = new HashMap<>();
             results.put("access_token",access_token);
             results.put("refresh_token", refresh_token);
