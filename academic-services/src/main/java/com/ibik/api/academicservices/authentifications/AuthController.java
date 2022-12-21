@@ -50,7 +50,6 @@ public class AuthController {
                     .withExpiresAt(new Date(System.currentTimeMillis() + 30 + 60 * 1000)) //expired 3 minutes
                     .withIssuer("auth0")
                     .sign(algorithm);
-
             
             Map<String,String> results = new HashMap<>();
             results.put("access_token",access_token);

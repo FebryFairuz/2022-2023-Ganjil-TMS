@@ -77,13 +77,11 @@ public class StudentsController {
     }
 
     @GetMapping
-    // public Iterable<Students> fetchStudent(){
     public ResponseEntity<ResponseData<Students>> fetchStudent(
             @RequestHeader(value = "Authorization", required = false) String Authorization) {
         ResponseData<Students> responseData = new ResponseData<>();
         if (Authorization != null) {
             Map<String,Object> decoded = new MyHelpers().DecodeJWT(Authorization);
-            System.out.println(decoded.get("message"));
             boolean result = (boolean) decoded.get("result");
             if(!result){
                 List<String> message = new ArrayList<>();
@@ -108,10 +106,6 @@ public class StudentsController {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
                 }
             }
-            
-            
-
-            
         } else {
             List<String> message = new ArrayList<>();
             message.add("Required request header 'Authorization'");
