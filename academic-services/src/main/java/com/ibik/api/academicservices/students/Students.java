@@ -3,8 +3,10 @@ package com.ibik.api.academicservices.students;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +18,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ibik.api.academicservices.courses.Courses;
+import com.ibik.api.academicservices.products.Products;
 import com.ibik.api.academicservices.program_study.ProgramStudy;
 import com.ibik.api.academicservices.programs.Programs;
 
@@ -67,13 +71,23 @@ public class Students implements Serializable{
     @JoinColumn(name = "program_study_id")
     private ProgramStudy programStudy;
     
-    @ManyToMany
+    // @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    // @JoinTable(
+    //     name = "student_rel_courses",
+    //     joinColumns = @JoinColumn(name = "student_id",referencedColumnName = "id"),
+    //     inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id")
+    // )
+    // @JsonManagedReference
+    // private Set<Courses> courses;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
-        name = "student_rel_courses",
-        joinColumns = @JoinColumn(name = "student_id"),
-        inverseJoinColumns = @JoinColumn(name = "course_id")
+        name = "student_rel_product",
+        joinColumns = @JoinColumn(name = "student_id",referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
-    private Set<Courses> courses;
+    //@JsonManagedReference
+    private Set<Products> products;
 
     public Students() {
     }
@@ -96,6 +110,14 @@ public class Students implements Serializable{
         //this.program_study_id = program_study_id;
     }
 
+
+    public Set<Products> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Products> products) {
+        this.products = products;
+    }
 
     public String getBirthdate() {
         return birthdate;
@@ -153,14 +175,6 @@ public class Students implements Serializable{
         this.lastname = lastname;
     }
 
-    // public int getProgram_id() {
-    //     return program_id;
-    // }
-
-    // public void setProgram_id(int program_id) {
-    //     this.program_id = program_id;
-    // }
-
     public Programs getPrograms() {
         return programs;
     }
@@ -169,21 +183,13 @@ public class Students implements Serializable{
         this.programs = programs;
     }
 
-    // public int getProgram_study_id() {
-    //     return program_study_id;
+    // public Set<Courses> getCourses() {
+    //     return courses;
     // }
 
-    // public void setProgram_study_id(int program_study_id) {
-    //     this.program_study_id = program_study_id;
+    // public void setCourses(Set<Courses> courses) {
+    //     this.courses = courses;
     // }
-
-    public Set<Courses> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(Set<Courses> courses) {
-        this.courses = courses;
-    }
 
     public ProgramStudy getProgramStudy() {
         return programStudy;

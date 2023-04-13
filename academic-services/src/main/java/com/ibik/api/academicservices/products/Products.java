@@ -1,4 +1,4 @@
-package com.ibik.api.academicservices.courses;
+package com.ibik.api.academicservices.products;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -12,15 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ibik.api.academicservices.students.Students;
 
 @Entity
-@Table(name="courses")
-public class Courses implements Serializable {
+@Table(name="products")
+public class Products implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -30,34 +29,47 @@ public class Courses implements Serializable {
     @Column(length = 50)
     @NotEmpty(message = "Name is required")
     private String name;
-
+    
+    @Column(columnDefinition = "TEXT")
+    @NotEmpty(message = "Description is required")
+    private String description;
+    
     @Column(length = 10)
-    @NotEmpty(message = "Code is required")
-    private String code;
+    @Min(value = 1, message = "Stock is required")
+    private int stock;
 
-    @Column(length = 5)
-    @Min(value = 1, message = "Credit is required")
-    private int credit;
+    @Column(length = 50)
+    @NotEmpty(message = "Price is required")
+    private String price;
 
     @Column(columnDefinition = "TINYINT(1)")
     private boolean is_active;
 
-    // @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    @Column(columnDefinition = "TEXT")
+    private String images;
+
+    // @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     // @JsonBackReference
     // private Set<Students> students;
 
-    public Courses() {
+
+    public Products() {
     }
 
-    public Courses(int id, @NotEmpty(message = "Name is required") String name,
-            @NotEmpty(message = "Code is required") String code, @NotBlank(message = "Credit is required") int credit,
-            boolean is_active) {
+    public Products(int id, @NotEmpty(message = "Name is required") String name,
+            @NotEmpty(message = "Description is required") String description,
+            @Min(value = 1, message = "Stock is required") int stock,
+            @NotEmpty(message = "Price is required") String price, boolean is_active, String images) {
         this.id = id;
         this.name = name;
-        this.code = code;
-        this.credit = credit;
+        this.description = description;
+        this.stock = stock;
+        this.price = price;
         this.is_active = is_active;
+        this.images = images;
     }
+
+
 
     public int getId() {
         return id;
@@ -75,20 +87,28 @@ public class Courses implements Serializable {
         this.name = name;
     }
 
-    public String getCode() {
-        return code;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getCredit() {
-        return credit;
+    public int getStock() {
+        return stock;
     }
 
-    public void setCredit(int credit) {
-        this.credit = credit;
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public boolean isIs_active() {
@@ -97,6 +117,14 @@ public class Courses implements Serializable {
 
     public void setIs_active(boolean is_active) {
         this.is_active = is_active;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 
     // public Set<Students> getStudents() {

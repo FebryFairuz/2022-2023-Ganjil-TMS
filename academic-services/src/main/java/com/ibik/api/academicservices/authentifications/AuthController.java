@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ibik.api.academicservices.helper.MyHelpers;
@@ -36,23 +37,34 @@ public class AuthController {
         String password = jobj.get("password").getAsString();
 
         try {
-            Students values = studentsServices.findByAuth(email, password);
-
+            //encrypted use JWT
             Algorithm algorithm = Algorithm.HMAC256(new MyHelpers().PRIVATE_KEY);
+
+            Students values = studentsServices.findByAuth(email, password);
+            ObjectMapper oMapper = new ObjectMapper();
+            Map<String, Object> userMap = oMapper.convertValue(values, Map.class);
+            
+            String id_token = JWT.create()
+                    .withClaim("identity", userMap)
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 60 + 160 * 1000)) //expired 1 minutes
+                    .withIssuer("auth0")
+                    .sign(algorithm);
+            
             String access_token = JWT.create()
                     .withSubject(values.getNpm())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 10 + 60 * 1000)) //expired 1 minutes
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 60 + 60 * 1000)) //expired 1 minutes
                     .withIssuer("auth0")
                     .sign(algorithm);
 
             String refresh_token = JWT.create()
                     .withSubject(values.getNpm())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 30 + 60 * 1000)) //expired 3 minutes
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 90 + 60 * 1000)) //expired 3 minutes
                     .withIssuer("auth0")
                     .sign(algorithm);
             
             Map<String,String> results = new HashMap<>();
             results.put("access_token",access_token);
+            results.put("id_token", id_token);
             results.put("refresh_token", refresh_token);
 
             return ResponseEntity.ok(results);

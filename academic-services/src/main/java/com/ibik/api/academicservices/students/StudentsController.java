@@ -40,8 +40,6 @@ public class StudentsController {
     private StudentsServices studentsServices;
 
     @PostMapping
-    // public Students postStudent(@Valid @RequestBody Students students, Errors
-    // errors) {
     public ResponseEntity<ResponseData<Students>> postStudent(@Valid @RequestBody Students students, Errors errors) {
         ResponseData<Students> responseData = new ResponseData<>();
 
@@ -77,7 +75,26 @@ public class StudentsController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseData<Students>> fetchStudent(
+    public ResponseEntity<ResponseData<Students>> fetchStudent() {
+        ResponseData<Students> responseData = new ResponseData<>();
+        try {
+            Iterable<Students> values = studentsServices.findAll();
+            responseData.setResult(true);
+            responseData.setMessage(null);
+            responseData.setData(values);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            List<String> message = new ArrayList<>();
+            message.add(e.getMessage());
+            responseData.setMessage(message);
+            responseData.setData(null);
+            responseData.setResult(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+    }
+
+    @GetMapping("with-auth")
+    public ResponseEntity<ResponseData<Students>> fetchStudentAuth(
             @RequestHeader(value = "Authorization", required = false) String Authorization) {
         ResponseData<Students> responseData = new ResponseData<>();
         if (Authorization != null) {
@@ -115,6 +132,7 @@ public class StudentsController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
     }
+
 
     @GetMapping("/{id}")
     // public Students fetchStudentById(@PathVariable("id") int id){
